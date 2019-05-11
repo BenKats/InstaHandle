@@ -5,9 +5,9 @@ import re
 
 base_url = 'https://www.instagram.com/'
 login_url = base_url + 'accounts/login/ajax'
-user_url = base_url + 'ontomeme'
 username = input("Enter Username: ")
 password = input("Enter Password: ")
+user_url = base_url + username
 uAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'
 login_data = {'username': username, 'password': password}
 
