@@ -14,7 +14,7 @@ def main():
     br = mechanize.Browser()
     br.set_handle_robots(False)   # ignore robots
     br.set_handle_refresh(False)  # can sometimes hang without this
-    br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+    br.addheaders = [('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36')]
 
 
     response = br.open(url)
@@ -34,10 +34,15 @@ def main():
     br.submit()
 
     print('##################################################')
-    print(response.read())
+    # print(response.read())
     print('##################################################')
-    resp2 = br.open(base_url + username )
+    resp2 = br.open(base_url + 'a' )
     print(resp2.read())
+
+    soup = BeautifulSoup(br.response().read(), 'html.parser' )
+    handle_status = soup.find('title').text.strip()
+    print('\n' + handle_status)
+    
     br.open(logout_url)
 
 if __name__ == '__main__':
