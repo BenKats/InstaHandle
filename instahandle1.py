@@ -2,16 +2,7 @@
 import mechanize
 from bs4 import BeautifulSoup
 
-def testHandle(br, base_url):
-    try:
-       resp2 = br.open(base_url + 'sillycenter' )
-       print(resp2.read())
-       print(resp2.code)
-    except mechanize.HTTPError:
-       print('Failure to load: '+ br.geturl())
-       print('HTTP Error: Probably 404, account doesnt exist or bot check')
-    
-   
+def parse(br):
     print('#######################################################')
     print('Check to see if on challenge page or on an account' + br.geturl())
     print('#######################################################')
@@ -27,6 +18,17 @@ def testHandle(br, base_url):
         print('Active Username')
     print('Check to see if on challenge page or on an account' + br.geturl())
 
+
+def testHandle(br, base_url):
+    try:
+       resp2 = br.open(base_url + 'sillycenter' )
+       print(resp2.read())
+       print(resp2.code)
+    except mechanize.HTTPError:
+       print('Failure to load: '+ br.geturl())
+       print('HTTP Error: Probably 404, account doesnt exist or bot check')
+    parse(br)
+   
 def main():
     base_url = 'https://www.instagram.com/'
     url = base_url + 'accounts/login/?force_classic_login'
