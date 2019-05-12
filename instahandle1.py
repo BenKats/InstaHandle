@@ -1,7 +1,31 @@
 #!/usr/local/bin/python3
 import mechanize
 from bs4 import BeautifulSoup
-import json
+
+def testHandle(br, base_url):
+    try:
+       resp2 = br.open(base_url + 'sillycenter' )
+       print(resp2.read())
+       print(resp2.code)
+    except mechanize.HTTPError:
+       print('Failure to load: '+ br.geturl())
+       print('HTTP Error: Probably 404, account doesnt exist or bot check')
+    
+   
+    print('#######################################################')
+    print('Check to see if on challenge page or on an account' + br.geturl())
+    print('#######################################################')
+
+    soup = BeautifulSoup(br.response().read(), 'html.parser' )
+    handle_status = soup.find('title').text.strip()
+    print('\n' + handle_status)
+    if handle_status == 'Content Unavailable • Instagram':
+        print('Reserved Username')
+    elif handle_status == 'Page Not Found • Instagram':
+        print('Available Username')
+    else:
+        print('Active Username')
+    print('Check to see if on challenge page or on an account' + br.geturl())
 
 def main():
     base_url = 'https://www.instagram.com/'
@@ -9,16 +33,14 @@ def main():
     logout_url = base_url + 'accounts/logout'
     username = input("Enter Username: ")
     password = input("Enter Password: ")
-    post_params = {'username': username, 'password': password}
 
     br = mechanize.Browser()
-    br.set_handle_robots(False)   # ignore robots
-    br.set_handle_refresh(False)  # can sometimes hang without this
+    br.set_handle_robots(False)   
+    br.set_handle_refresh(False)  
     br.addheaders = [('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36')]
 
-
     response = br.open(url)
-    # # print(response.read())
+    # print(response.read())
 
     # for f in br.forms():
     #     print("Form name:",f.name)
@@ -33,17 +55,12 @@ def main():
     br.form['password'] = password
     br.submit()
 
-    print('##################################################')
-    # print(response.read())
-    print('##################################################')
-    resp2 = br.open(base_url + 'a' )
-    print(resp2.read())
-
-    soup = BeautifulSoup(br.response().read(), 'html.parser' )
-    handle_status = soup.find('title').text.strip()
-    print('\n' + handle_status)
-    
+    print('#######################################################')
+    print('Login Status: ' + str(response.code))
+    print('#######################################################')
+    testHandle(br, base_url)
     br.open(logout_url)
+    br.close()
 
 if __name__ == '__main__':
     main()
