@@ -34,16 +34,11 @@ def testHandle(br, base_url):
                 print('Failure to load: ' + br.geturl())
                 print('HTTP Error: Probably 404, account doesnt exist or bot check')
             parse(br)
-
-
-def main():
-    base_url = 'https://www.instagram.com/'
-    url = base_url + 'accounts/login/?force_classic_login'
-    logout_url = base_url + 'accounts/logout'
+   
+def login(br, url):
     username = input("Enter Username: ")
     password = input("Enter Password: ")
 
-    br = mechanize.Browser()
     br.set_handle_robots(False)   
     br.set_handle_refresh(False)  
     br.addheaders = [('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36')]
@@ -67,6 +62,13 @@ def main():
     print('Login Status: ' + str(response.code))
     print('#######################################################')
 
+def main():
+    base_url = 'https://www.instagram.com/'
+    url = base_url + 'accounts/login/?force_classic_login'
+    logout_url = base_url + 'accounts/logout'
+    br = mechanize.Browser()
+    
+    login(br, url)
     testHandle(br, base_url)
     br.open(logout_url)
     br.close()
