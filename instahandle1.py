@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 def parse(br):
     print('#######################################################')
-    print('Check to see if on challenge page or on an account' + br.geturl())
+    print('Check to see if on challenge page or on an account ' + br.geturl())
     print('#######################################################')
 
     soup = BeautifulSoup(br.response().read(), 'html.parser' )
@@ -14,21 +14,28 @@ def parse(br):
         print('Reserved Username')
     elif handle_status == 'Page Not Found • Instagram':
         print('Available Username')
+        print('Check to see if on challenge page or on an account ' + br.geturl())
     else:
         print('Active Username')
-    print('Check to see if on challenge page or on an account' + br.geturl())
-
+    
 
 def testHandle(br, base_url):
-    try:
-       resp2 = br.open(base_url + 'sillycenter' )
-       print(resp2.read())
-       print(resp2.code)
-    except mechanize.HTTPError:
-       print('Failure to load: '+ br.geturl())
-       print('HTTP Error: Probably 404, account doesnt exist or bot check')
-    parse(br)
-   
+    with open('handles.txt') as handles:
+        for word in handles.readlines():
+            handle = word.strip('\n')
+            if len(handle) > 30:
+                print('Exceeds character limit: ' + handle)
+                continue
+            try:
+                resp2 = br.open(base_url + handle)
+                # print(resp2.read())
+                print('Satus of ' + handle + 'page ' + str(resp2.code))
+            except mechanize.HTTPError:
+                print('Failure to load: ' + br.geturl())
+                print('HTTP Error: Probably 404, account doesnt exist or bot check')
+            parse(br)
+
+
 def main():
     base_url = 'https://www.instagram.com/'
     url = base_url + 'accounts/login/?force_classic_login'
@@ -57,9 +64,9 @@ def main():
     br.form['password'] = password
     br.submit()
 
-    print('#######################################################')
     print('Login Status: ' + str(response.code))
     print('#######################################################')
+
     testHandle(br, base_url)
     br.open(logout_url)
     br.close()
