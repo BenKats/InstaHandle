@@ -1,4 +1,9 @@
 #!/usr/local/bin/python3
+# Made by Benjamin Kats 2019
+# github.com/BenKats
+# Instagram: @ben_kats
+# linkedin.com/in/benkats/
+
 import mechanize
 from bs4 import BeautifulSoup
 
@@ -21,19 +26,21 @@ def parse(br):
 
 def testHandle(br, base_url):
     with open('handles.txt') as handles:
-        for word in handles.readlines():
-            handle = word.strip('\n')
-            if len(handle) > 30:
-                print('Exceeds character limit: ' + handle)
-                continue
-            try:
-                resp2 = br.open(base_url + handle)
-                # print(resp2.read())
-                print('Satus of ' + handle + 'page ' + str(resp2.code))
-            except mechanize.HTTPError:
-                print('Failure to load: ' + br.geturl())
-                print('HTTP Error: Probably 404, account doesnt exist or bot check')
-            parse(br)
+        with open('available_handles.txt', 'w') as availables:
+            for word in handles.readlines():
+                handle = word.strip('\n')
+                if len(handle) > 30:
+                    print('Exceeds character limit: ' + handle)
+                    continue
+                try:
+                    resp2 = br.open(base_url + handle)
+                    # print(resp2.read())
+                    print('Satus of ' + handle + 'page ' + str(resp2.code))
+                except mechanize.HTTPError:
+                    availables.write(handle + '\n')
+                    print('Failure to load: ' + br.geturl())
+                    print('HTTP Error: Probably 404, account doesnt exist or bot check')
+                parse(br)
    
 def login(br, url):
     username = input("Enter Username: ")
@@ -67,7 +74,7 @@ def main():
     url = base_url + 'accounts/login/?force_classic_login'
     logout_url = base_url + 'accounts/logout'
     br = mechanize.Browser()
-    
+
     login(br, url)
     testHandle(br, base_url)
     br.open(logout_url)
